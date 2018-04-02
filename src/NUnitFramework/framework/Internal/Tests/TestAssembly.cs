@@ -93,12 +93,20 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get custom attributes specified on the assembly
         /// </summary>
+        
+#if SANDBOX_COMPATIBLE
+        public override TAttr[] GetCustomAttributes<TAttr>(bool inherit)
+        {
+            return new TAttr[0];
+        }
+#else
         public override TAttr[] GetCustomAttributes<TAttr>(bool inherit)
         {
             return Assembly != null
                 ? Assembly.GetAttributes<TAttr>().ToArray()
                 : new TAttr[0];
         }
+#endif        
     }
 }
 

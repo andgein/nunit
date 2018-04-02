@@ -99,7 +99,7 @@ namespace NUnit.Framework.Internal
         {
             Directory.SetCurrentDirectory(originalDirectory);
 
-#if !NETCOREAPP1_1
+#if !NETCOREAPP1_1 && !SANDBOX_COMPATIBLE
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
             Thread.CurrentPrincipal = originalPrincipal;

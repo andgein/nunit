@@ -185,6 +185,20 @@ namespace NUnit.Framework.Internal
                 _currentContext.Value = value;
             }
         }
+#elif SANDBOX_COMPATIBLE
+        private static  TestExecutionContext _currentContext = new AdhocContext();
+        
+        /// <summary>
+        /// Gets and sets the current context.
+        /// </summary>
+        public static TestExecutionContext CurrentContext
+        {
+            get { return _currentContext; }
+            internal set // internal so that AdhocTestExecutionTests can get at it
+            {
+                _currentContext = value;
+            }
+        }
 #else
         // In all other builds, we use the CallContext
         private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
@@ -382,7 +396,7 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentCulture = value;
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_6 && !SANDBOX_COMPATIBLE
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
 #endif
             }
@@ -397,7 +411,7 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentUICulture = value;
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_6 && !SANDBOX_COMPATIBLE
                 Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 #endif
             }
@@ -460,7 +474,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void EstablishExecutionEnvironment()
         {
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_6 && !SANDBOX_COMPATIBLE
             Thread.CurrentThread.CurrentCulture = _currentCulture;
             Thread.CurrentThread.CurrentUICulture = _currentUICulture;
             Thread.CurrentPrincipal = _currentPrincipal;
@@ -514,7 +528,7 @@ namespace NUnit.Framework.Internal
 
 #region InitializeLifetimeService
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_6 && !SANDBOX_COMPATIBLE
         /// <summary>
         /// Obtain lifetime service object
         /// </summary>
