@@ -418,8 +418,27 @@ namespace NUnit.Framework
         private static StackFilter SystemEnvironmentFilter = new StackFilter(@" System\.Environment\.");
 
         private static string GetStackTrace() =>
-            StackFilter.DefaultFilter.Filter(SystemEnvironmentFilter.Filter(Environment.StackTrace));
-
+            StackFilter.DefaultFilter.Filter(SystemEnvironmentFilter.Filter(GetEnvironmentStackTrace()));
+        
+#if NET40 || NET45
+        /* These two methods are copied from internal static Environment.StackTrace(), but without demanding EnvironmentPermission.
+           Additionally, we removed System.Diagnostics.StackTrace.TraceFormat.Normal from arguments of StackTrace.ToString()
+           because TraceFormat is internal */
+        internal static string GetEnvironmentStackTrace()
+        {
+            return GetEnvironmentStackTrace(null, true);
+        }
+        
+        internal static string GetEnvironmentStackTrace(Exception e, bool needFileInfo)
+        {
+            return (e != null ? new System.Diagnostics.StackTrace(e, needFileInfo) : new System.Diagnostics.StackTrace(needFileInfo)).ToString();
+        }
+#else
+        internal static string GetEnvironmentStackTrace()
+        {
+            return Environment.StackTrace;
+        }
+#endif
         private static void IncrementAssertCount()
         {
             TestExecutionContext.CurrentContext.IncrementAssertCount();

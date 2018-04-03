@@ -126,8 +126,14 @@ namespace NUnitLite
                 Environment.Version.ToString());
 #endif
 #if !PLATFORM_DETECTION
-            xmlWriter.WriteAttributeString("os-version",
-                                           System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+            #if NETSTANDARD1_6 || NETSTANDARD2_0 || NETCOREAPP1_1 || NETCOREAPP2_0
+                var osVersion = System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+            #elif NET45
+                var osVersion = Environment.OSVersion.Version.ToString();
+            #else
+                var osVersion = "";
+            #endif
+            xmlWriter.WriteAttributeString("os-version", osVersion);
 #else
             xmlWriter.WriteAttributeString("os-version",
                                            OSPlatform.CurrentPlatform.ToString());

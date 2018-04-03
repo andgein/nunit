@@ -373,7 +373,11 @@ namespace NUnit.Framework.Api
             env.AddAttribute("clr-version", Environment.Version.ToString());
 #endif
 #if !PLATFORM_DETECTION
-            env.AddAttribute("os-version", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+            #if NETSTANDARD1_6 || NETSTANDARD2_0 || NETCOREAPP1_1 || NETCOREAPP2_0
+                env.AddAttribute("os-version", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+            #elif NET45
+                env.AddAttribute("os-version", Environment.OSVersion.Version.ToString());
+            #endif
 #else
             env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());
 #endif

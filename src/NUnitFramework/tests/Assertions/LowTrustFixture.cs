@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET20 || NET35 || NET40 || NET45
+#if PLATFORM_DETECTION
 using System;
 using System.Collections.Generic;
 using System.Linq;
